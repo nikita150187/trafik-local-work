@@ -1,73 +1,6 @@
-/*import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-
-// TypeScript interface for traffic incident data
-interface TrafficIncident {
-  id: string;
-  description: string;
-  severity: string;
-  location: string;
-  timestamp: string;
-}
-
-const TrafficIncident: React.FC = () => {
-  // State to store traffic incidents
-  const [incidents, setIncidents] = useState<TrafficIncident[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Fetch traffic incidents when component mounts
-  useEffect(() => {
-    axios
-      .get('http://localhost:5037/api/traffic-incidents') // Call your backend server here
-      .then((response) => {
-        setIncidents(response.data); // Assuming the server response contains the incidents array
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError('Failed to fetch traffic incidents');
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  return (
-    <div>
-      <h2>Traffic Incidents</h2>
-      <ul>
-        {incidents.map((incident) => (
-          <li key={incident.id}>
-            <div>
-              <strong>Description:</strong> {incident.description}
-            </div>
-            <div>
-              <strong>Severity:</strong> {incident.severity}
-            </div>
-            <div>
-              <strong>Location:</strong> {incident.location}
-            </div>
-            <div>
-              <strong>Timestamp:</strong> {incident.timestamp}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-export default TrafficIncident;*/
-
-
-import React, { useState } from "react";
-import axios from "axios";
+import "./Traffic.css"
 
 interface TrafficIncident {
   description: string;
@@ -76,15 +9,15 @@ interface TrafficIncident {
   timestamp: string;
 }
 
-const TrafficIncidentComponent = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+const TrafficIncidentComponent: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [trafficIncidents, setTrafficIncidents] = useState<TrafficIncident[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchTrafficData = async () => {
     if (!searchQuery) {
-      setError("Please enter a city, address, or country.");
+      setError('Please enter a city, address, or country.');
       return;
     }
 
@@ -98,7 +31,7 @@ const TrafficIncidentComponent = () => {
       );
 
       if (!geoResponse.data.coord) {
-        setError("Location not found.");
+        setError('Location not found.');
         setLoading(false);
         return;
       }
@@ -114,11 +47,22 @@ const TrafficIncidentComponent = () => {
 
       setTrafficIncidents(incidents);
     } catch (err) {
-      console.error("Error fetching traffic:", err);
-      setError("Failed to fetch traffic incidents.");
+      console.error('Error fetching traffic:', err);
+      setError('Failed to fetch traffic incidents.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to get color based on severity
+  const getSeverityColor = (severity: string): string => {
+    if (severity === 'High') {
+      return 'red';
+    }
+    if (severity === 'Medium') {
+      return 'green';
+    }
+    return 'black'; // Default color
   };
 
   return (
@@ -132,7 +76,7 @@ const TrafficIncidentComponent = () => {
         style={styles.input}
       />
       <button onClick={fetchTrafficData} style={styles.button}>
-        {loading ? "Loading..." : "Fetch Traffic Data"}
+        {loading ? 'Loading...' : 'Fetch Traffic Data'}
       </button>
 
       {error && <p style={styles.error}>{error}</p>}
@@ -142,16 +86,30 @@ const TrafficIncidentComponent = () => {
           <p>Loading incidents...</p>
         ) : trafficIncidents.length > 0 ? (
           trafficIncidents.map((incident, index) => (
-            <div key={index} style={styles.incidentItem}>
+            <div
+              key={index}
+              style={{
+                ...styles.incidentItem,
+                backgroundColor:
+                  index % 2 === 0
+                    ? '#f0f8ff'
+                    : index % 3 === 0
+                    ? '#ffeb3b' // Yellow color for every third incident
+                    : '#e0f7fa', // Default color
+              }}
+            >
               <h3>{incident.description}</h3>
               <p>
-                <strong>Severity:</strong> {incident.severity}
+                <strong style={styles.boldText}>Severity: </strong>
+                <span style={{ fontWeight: 'bold', color: getSeverityColor(incident.severity) }}>
+                  {incident.severity}
+                </span>
               </p>
               <p>
-                <strong>Location:</strong> {incident.location}
+                <strong style={styles.boldText}>Location:</strong> {incident.location}
               </p>
               <p>
-                <strong>Time:</strong> {incident.timestamp}
+                <strong style={styles.boldText}>End Time:</strong> {incident.timestamp}
               </p>
             </div>
           ))
@@ -164,12 +122,34 @@ const TrafficIncidentComponent = () => {
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
-  container: { textAlign: "center", padding: "20px", maxWidth: "800px", margin: "0 auto" },
-  input: { padding: "10px", fontSize: "16px", marginRight: "10px", width: "300px" },
-  button: { padding: "10px 20px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "5px" },
-  error: { color: "red", marginTop: "10px" },
-  incidentList: { marginTop: "20px" },
-  incidentItem: { background: "#f9f9f9", padding: "15px", borderRadius: "5px", marginBottom: "10px" },
+  container: { textAlign: 'center', padding: '20px', maxWidth: '800px', margin: '0 auto' },
+  input: { padding: '10px', fontSize: '16px', marginRight: '10px', width: '300px' },
+  button: { padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px' },
+  error: { color: 'red', marginTop: '10px' },
+  incidentList: {
+    marginTop: '20px',
+    height: '400px', /* Set a fixed height for scrolling */
+    overflowY: 'auto', /* Enable vertical scrolling */
+    border: '1px solid #ddd',
+    padding: '10px',
+    borderRadius: '5px',
+    backgroundColor: '#f9f9f9',
+    display: 'flex',
+    flexDirection: 'column', /* Stack incidents vertically */
+  },
+  incidentItem: {
+    padding: '15px',
+    borderRadius: '5px',
+    marginBottom: '10px',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column', /* Arrange content vertically */
+    textAlign: 'left',
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: 'green', // Green color for all bold text
+  },
 };
 
 export default TrafficIncidentComponent;
