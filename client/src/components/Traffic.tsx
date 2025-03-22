@@ -67,7 +67,7 @@ const TrafficIncidentComponent: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <h1>Traffic Incidents</h1>
+      <h1>Traffic Updates</h1>
       <input
         type="text"
         value={searchQuery}
