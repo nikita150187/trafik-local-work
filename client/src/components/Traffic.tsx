@@ -133,7 +133,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: '1px solid #ddd',
     padding: '10px',
     borderRadius: '5px',
-    backgroundColor: '#f9f9f9',
+    backgroundColor:'aqua',
     display: 'flex',
     flexDirection: 'column', /* Stack incidents vertically */
   },
@@ -145,6 +145,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column', /* Arrange content vertically */
     textAlign: 'left',
+    
+    
   },
   boldText: {
     fontWeight: 'bold',
