@@ -40,7 +40,7 @@ const TrafficIncidentComponent: React.FC = () => {
 
       // Fetch traffic incidents using the coordinates from the server
       const response = await axios.get(
-        `http://localhost:8000/api/traffic-incidents?lat=${lat}&lng=${lon}`
+        `http://localhost:5000/api/traffic-incidents?lat=${lat}&lng=${lon}`
       );
 
       const incidents: TrafficIncident[] = response.data.Situations || [];
@@ -133,7 +133,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: '1px solid #ddd',
     padding: '10px',
     borderRadius: '5px',
-    backgroundColor:'white',
+    backgroundColor:'aqua',
     display: 'flex',
     flexDirection: 'column', /* Stack incidents vertically */
   },
